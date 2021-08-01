@@ -17,26 +17,7 @@ jobs:
     - name: if fail
       uses: actions/github-script@v4
       with:
-        github-token: ${{secrets.token}}
         script: |
-          const creator = context.payload.sender.login
-          const opts = github.issues.listForRepo.endpoint.merge({
-            ...context.issue,
-            creator,
-            state: 'all'
-          })
-          const issues = await github.paginate(opts)
-
-          for (const issue of issues) {
-            if (issue.number === context.issue.number) {
-              continue
-            }
-
-            if (issue.pull_request) {
-              return // Creator is already a contributor.
-            }
-          }
-
           await github.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
