@@ -19,8 +19,8 @@ jobs:
       with:
         github-token: ${{secrets.token}}
         script: |
-          const ref = "${{secrets.token}}
-          const pull_number = Number(ref.split("/")[2])
+          const ref = "${{secrets.token}}";
+          const pull_number = Number(ref.split("/")[2]);
           await github.pulls.createRevier({
             ...context.repo,
             pull_number,
