@@ -19,6 +19,7 @@ jobs:
       with:
         node-vsersion: ${{ matrix.node-version }}
     - run: yarn install
+    - run: ls -al
     - run: yarn test
         
 #     - name: 🗳 Create @sync folder and tar Unzip
