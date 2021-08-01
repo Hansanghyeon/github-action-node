@@ -19,7 +19,7 @@ jobs:
         script: |
           const ref = "${{github.ref}}"
           const pull_number = Number(ref.split("/")[2])
-          const jsLog = ${{ steps.test.outputs.JS }}
+          const jsLog = "${{steps.test.outputs.JS}}"
           console.log(jsLog)
           await github.issues.createComment({
             issue_number: context.issue.number,
