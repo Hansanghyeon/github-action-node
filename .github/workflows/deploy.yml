@@ -12,16 +12,14 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-vsersion: '16.x'
-    - run: cd Theme && yarn install
-    - run: cd Theme && yarn test
-    - run: cd Theme; yarn lint:js; echo '::set-output name=JS::$(yarn lint:js)'
+    - run: cd Theme; yarn install; yarn lint:js; echo '::set-output name=JS::$(yarn lint:js)'
     - name: if fail
       uses: actions/github-script@v4
       with:
         script: |
           const ref = "${{github.ref}}"
           const pull_number = Number(ref.split("/")[2])
-          const jsLog = ${{ steps.test.outputs.js }}
+          const jsLog = ${{ steps.test.outputs.JS }}
           console.log(jsLog)
           await github.issues.createComment({
             issue_number: context.issue.number,
