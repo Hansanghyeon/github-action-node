@@ -23,4 +23,4 @@ jobs:
             repo: context.repo.repo,
             body: 'Welcome, new contributor!'
           })
-      if: failure()
+#       if: failure()
