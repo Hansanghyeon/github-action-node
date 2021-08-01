@@ -8,18 +8,14 @@ jobs:
   asset:
     name: 🚚 Asset download and host upload
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [10.x, 12.x, 14.x, 15.x]
     steps:
     - uses: actions/checkout@v2
-    - run: cd Theme && ls -al
     - name: 🔨 Node Build release Theme file
       uses: actions/setup-node@v2
       with:
-        node-vsersion: ${{ matrix.node-version }}
+        node-vsersion: '16.x'
+    - run: cd Theme
     - run: yarn install
-    - run: ls -al
     - run: yarn test
         
 #     - name: 🗳 Create @sync folder and tar Unzip
