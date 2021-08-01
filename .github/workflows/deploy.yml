@@ -13,21 +13,31 @@ jobs:
         node-vsersion: '16.x'
     - name: 🔨 Node Build release Theme file
       id: test
-      run: cd Theme; yarn install; yarn test
+      run: |
+        cd Theme;\
+        yarn install;\
+        echo "::set-output name=JS::$(yarn lint:js)";\
+        echo "::set-output name=CSS::$(yarn lint:css)";
     - name: if fail
       uses: actions/github-script@v4
       env:
-        JS_LOG: ${{steps.test.outputs.error}}
+        JS_LOG: ${{steps.test.outputs.JS}}
+        CSS_LOG: ${{steps.test.outputs.CSS}}
       with:
         script: |
-          const { JS_LOG } = process.env
+          const { JS_LOG, CSS_LOG } = process.env
           const ref = "${{github.ref}}"
           const pull_number = Number(ref.split("/")[2])
-          console.log(JS_LOG)
           await github.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
             body: JS_LOG
+          })
+          await github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: CSS_LOG
           })
       if: failure()
