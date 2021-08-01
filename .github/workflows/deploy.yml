@@ -30,4 +30,4 @@ jobs:
             repo: context.repo.repo,
             body: JS_LOG
           })
-#       if: failure()
+      if: failure()
