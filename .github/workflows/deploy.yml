@@ -1,52 +1,34 @@
-name: 🚧 github action meta
+name: 🧑‍⚕️ css & js lint test
 on: [pull_request]
 
 jobs:
   asset:
-    name: 🚚 Asset download and host upload
+    name: 🧑‍⚕️ css & js lint test
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Get yarn cache directory path
-      id: yarn-cache-dir-path
-      run: |
-        cd Theme;
-        echo "::set-output name=dir::$(yarn cache dir)"
-    - uses: actions/cache@v1
-      id: yarn-cache
-      with:
-        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
-    - name: 🏗 setup-node
-      uses: actions/setup-node@v2
-      with:
-        node-vsersion: '16.x'
-    - name: 🔨 Node Build release Theme file
-      id: test
-      run: |
-        cd Theme;
-        yarn install;
-        CSS_LOG=$(yarn lint:css);
-        CSS_LOG="${CSS_LOG//'%'/'%25'}";
-        CSS_LOG="${CSS_LOG//$'\n'/'%0A'}";
-        CSS_LOG="${CSS_LOG//$'\r'/'%0D'}";
-        echo "::set-output name=CSS_LOG::$CSS_LOG";
-        yarn test;
-    - name: if fail
-      uses: actions/github-script@v4
-      env:
-        CSS_LOG: ${{steps.test.outputs.CSS_LOG}}
-      with:
-        script: |
-          const { CSS_LOG } = process.env
-          const ref = "${{github.ref}}"
-          const pull_number = Number(ref.split("/")[2])
-          await github.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: CSS_LOG
-          })
-      if: failure()
+      - uses: actions/checkout@v2
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: |
+          cd Theme;
+          echo "::set-output name=dir::$(yarn cache dir)"
+      - uses: actions/cache@v1
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: 🏗 setup-node
+        uses: actions/setup-node@v2
+        with:
+          node-vsersion: "16.x"
+      - name: Install Dependencies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        working-directory: ./Theme
+        run: yarn install
+      - name: 🔨 Node Build release Theme file
+        id: test
+        run: |
+          cd Theme;
+          yarn test;
