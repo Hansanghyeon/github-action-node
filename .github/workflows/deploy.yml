@@ -1,0 +1,54 @@
+name: 🚧 github action meta
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  asset:
+    name: 🚚 Asset download and host upload
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x, 15.x]
+    steps:
+    - uses: actions/checkout@v2
+    - name: 🔨 Node Build release Theme file
+      uses: actions/setup-node@v2
+      with:
+        node-vsersion: ${{ matrix.node-version }}
+        cache: 'yarn'
+    - run: ls -al
+        
+#     - name: 🗳 Create @sync folder and tar Unzip
+#       run: |
+#         mkdir @sync
+#         tar xvf deploy-src.tar -C ./@sync
+#         rm deploy-src.tar
+    
+#     - name: 📂 Sync files to Server
+#       uses: AEnterprise/rsync-deploy@v1.0
+#       env:
+#         DEPLOY_KEY: ${{ secrets.KEY }}
+#         SERVER_PORT: ${{ secrets.RSYNC_PORT }}
+#         FOLDER: "./@sync/"
+#         ARGS: "-rltgoDzvO --ignore-times"
+#         SERVER_IP: ${{ secrets.HOST }}
+#         USERNAME: ${{ secrets.USERNAME }}
+#         SERVER_DESTINATION: "/volume1/docker/${{ secrets.PROJECT_TYPE }}/${{ secrets.PROJECT_DIR }}"
+
+#   source:
+#     name: 📮 update source Github 'git pull'
+#     runs-on: ubuntu-latest
+#     steps:
+
+#     - name: executing remote ssh commands using password
+#       uses: appleboy/ssh-action@master
+#       with:
+#         host: ${{ secrets.HOST }}
+#         username: ${{ secrets.USERNAME }}
+#         key: ${{ secrets.KEY }}
+#         port: ${{ secrets.PORT }}
+#         script: |
+#           cd ${{ secrets.PROJECT_TYPE }}/${{ secrets.PROJECT_DIR }}
+#           ls -al
