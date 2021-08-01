@@ -16,9 +16,9 @@ jobs:
       run: |
         cd Theme;
         yarn install;
-        echo '<<EOF' >> $LOG
-        yarn test >> $LOG
-        echo 'EOF' >> $LOG
+        echo "::group::My title"
+        LOG=`yarn test`
+        echo "::endgroup::"
         echo "::set-output name=LOG::$LOG";
         yarn test;
     - name: if fail
