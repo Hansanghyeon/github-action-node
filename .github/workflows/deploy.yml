@@ -16,6 +16,7 @@ jobs:
       run: |
         cd Theme;\
         yarn install;\
+        yarn test;\
         echo "::set-output name=JS::$(yarn lint:js)";\
         echo "::set-output name=CSS::$(yarn lint:css)";
     - name: if fail
