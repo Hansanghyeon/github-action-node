@@ -1,5 +1,5 @@
 name: 🚧 github action meta
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
   asset:
@@ -30,7 +30,6 @@ jobs:
           const { LOG } = process.env
           const ref = "${{github.ref}}"
           const pull_number = Number(ref.split("/")[2])
-          console.log(JS_LOG, CSS_LOG)
           await github.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
