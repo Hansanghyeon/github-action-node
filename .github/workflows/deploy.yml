@@ -19,17 +19,28 @@ jobs:
       with:
         github-token: ${{secrets.token}}
         script: |
-          const ref = "${{secrets.token}}";
-          const pull_number = Number(ref.split("/")[2]);
-          await github.pulls.createReview({
-            ...context.repo,
-            pull_number,
-            body: "테스트코드를 다시 확인해주세요. ",
-            event: "REQUEST_CHANGES"
+          const creator = context.payload.sender.login
+          const opts = github.issues.listForRepo.endpoint.merge({
+            ...context.issue,
+            creator,
+            state: 'all'
           })
-          await github.pulls.update({
-            ...context.repo,
-            pull_number,
-            state: "closed"
+          const issues = await github.paginate(opts)
+
+          for (const issue of issues) {
+            if (issue.number === context.issue.number) {
+              continue
+            }
+
+            if (issue.pull_request) {
+              return // Creator is already a contributor.
+            }
+          }
+
+          await github.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: 'Welcome, new contributor!'
           })
       if: failure()
