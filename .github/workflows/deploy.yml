@@ -14,21 +14,20 @@ jobs:
     - name: 🔨 Node Build release Theme file
       id: test
       run: |
-        cd Theme;\
-        yarn install;\
-        JS_LOG=`yarn lint:js`;\
-        CSS_LOG=`yarn lint:css`;\
-        echo "::set-output name=JS::$JS_LOG";\
-        echo "::set-output name=CSS::$CSS_LOG";\
+        cd Theme;
+        yarn install;
+        echo '<<EOF' >> $LOG
+        yarn test >> $LOG
+        echo 'EOF' >> $LOG
+        echo "::set-output name=LOG::$LOG";
         yarn test;
     - name: if fail
       uses: actions/github-script@v4
       env:
-        JS_LOG: ${{steps.test.outputs.JS}}
-        CSS_LOG: ${{steps.test.outputs.CSS}}
+        LOG: ${{steps.test.outputs.LOG}}
       with:
         script: |
-          const { JS_LOG, CSS_LOG } = process.env
+          const { LOG } = process.env
           const ref = "${{github.ref}}"
           const pull_number = Number(ref.split("/")[2])
           console.log(JS_LOG, CSS_LOG)
@@ -36,12 +35,6 @@ jobs:
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: JS_LOG
-          })
-          await github.issues.createComment({
-            issue_number: context.issue.number,
-            owner: context.repo.owner,
-            repo: context.repo.repo,
-            body: CSS_LOG
+            body: LOG
           })
       if: failure()
