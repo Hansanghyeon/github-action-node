@@ -13,7 +13,7 @@ jobs:
         id: yarn-cache-dir-path
         working-directory: ${{ env.working-directory }}
         run: echo "::set-output name=dir::$(yarn cache dir)"
-      - uses: actions/cache@v1
+      - uses: actions/cache@v2
         id: yarn-cache
         with:
           path: |
