@@ -13,11 +13,11 @@ jobs:
         node-vsersion: '16.x'
     - name: 🔨 Node Build release Theme file
       id: test
-      run: cd Theme; yarn install; yarn lint:js; echo '::set-output name=JS::$(yarn lint:js)'
+      run: cd Theme; yarn install; yarn test
     - name: if fail
       uses: actions/github-script@v4
       env:
-        JS_LOG: ${{steps.test.outputs.JS}}
+        JS_LOG: ${{steps.test.outputs.error}}
       with:
         script: |
           const { JS_LOG } = process.env
