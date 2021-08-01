@@ -1,8 +1,7 @@
 name: 🚧 github action meta
 on:
-  push:
-    branches:
-      - main
+  pull_request:
+    branches: [ $default-branch ]
 
 jobs:
   asset:
@@ -14,38 +13,25 @@ jobs:
       uses: actions/setup-node@v2
       with:
         node-vsersion: '16.x'
+        cache: 'yarn'
     - run: cd Theme && yarn install
     - run: cd Theme && yarn test
-        
-#     - name: 🗳 Create @sync folder and tar Unzip
-#       run: |
-#         mkdir @sync
-#         tar xvf deploy-src.tar -C ./@sync
-#         rm deploy-src.tar
-    
-#     - name: 📂 Sync files to Server
-#       uses: AEnterprise/rsync-deploy@v1.0
-#       env:
-#         DEPLOY_KEY: ${{ secrets.KEY }}
-#         SERVER_PORT: ${{ secrets.RSYNC_PORT }}
-#         FOLDER: "./@sync/"
-#         ARGS: "-rltgoDzvO --ignore-times"
-#         SERVER_IP: ${{ secrets.HOST }}
-#         USERNAME: ${{ secrets.USERNAME }}
-#         SERVER_DESTINATION: "/volume1/docker/${{ secrets.PROJECT_TYPE }}/${{ secrets.PROJECT_DIR }}"
-
-#   source:
-#     name: 📮 update source Github 'git pull'
-#     runs-on: ubuntu-latest
-#     steps:
-
-#     - name: executing remote ssh commands using password
-#       uses: appleboy/ssh-action@master
-#       with:
-#         host: ${{ secrets.HOST }}
-#         username: ${{ secrets.USERNAME }}
-#         key: ${{ secrets.KEY }}
-#         port: ${{ secrets.PORT }}
-#         script: |
-#           cd ${{ secrets.PROJECT_TYPE }}/${{ secrets.PROJECT_DIR }}
-#           ls -al
+    - name: if fail
+      uses: actions/github-script@v4
+      with:
+        github-token: ${{secrets.token}}
+        script: |
+          const ref = "${{secrets.token}}
+          const pull_number = Number(ref.split("/")[2])
+          await github.pulls.createRevier({
+            ...context.repo,
+            pull_number,
+            body: "테스트코드를 다시 확인해주세요. ",
+            event: "REQUEST_CHANGES"
+          })
+          await github.pulls.update({
+            ...context.repo,
+            pull_number,
+            state: "closed"
+          })
+      if: failure()
