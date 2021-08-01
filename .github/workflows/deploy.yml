@@ -1,8 +1,5 @@
 name: 🚧 github action meta
-on:
-  pull_request:
-    branches:
-      - develop
+on: [push, pull_request]
 
 jobs:
   asset:
