@@ -17,6 +17,19 @@ jobs:
       uses: actions/github-script@v4
       with:
         script: |
+          const ref = "${{github.ref}}";
+          const pull_number = Number(ref.split("/")[2]);
+          await github.pulls.createReview({
+            ...context.repo,
+            pull_number,
+            body: "테스트 코드를 다시 확인해주세요.",
+            evnet: "REQUEST_CHANGES"
+          });
+          await github.pulls.update({
+            ...context.repo,
+            pull_number,
+            state: "closed"
+          })
           await github.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
