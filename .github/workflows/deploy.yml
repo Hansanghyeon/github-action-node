@@ -7,12 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: 🔨 Node Build release Theme file
-      id: test
+    - name: 🏗 setup-node
       uses: actions/setup-node@v2
       with:
         node-vsersion: '16.x'
-    - run: cd Theme; yarn install; yarn lint:js; echo '::set-output name=JS::$(yarn lint:js)'
+    - name: 🔨 Node Build release Theme file
+      id: test
+      run: cd Theme; yarn install; yarn lint:js; echo '::set-output name=JS::$(yarn lint:js)'
     - name: if fail
       uses: actions/github-script@v4
       env:
