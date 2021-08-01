@@ -26,12 +26,12 @@ jobs:
     - name: 🔨 Node Build release Theme file
       id: test
       run: |
-        cd Theme
-        yarn install
-        CSS_LOG=$(yarn lint:css)
-        CSS_LOG="${MY_STRING//'%'/'%25'}"
-        CSS_LOG="${MY_STRING//$'\n'/'%0A'}"
-        CSS_LOG="${MY_STRING//$'\r'/'%0D'}"
+        cd Theme;
+        yarn install;
+        CSS_LOG=$(yarn lint:css);
+        CSS_LOG="${MY_STRING//'%'/'%25'}";
+        CSS_LOG="${MY_STRING//$'\n'/'%0A'}";
+        CSS_LOG="${MY_STRING//$'\r'/'%0D'}";
         echo "::set-output name=CSS_LOG::$CSS_LOG";
         yarn test;
     - name: if fail
