@@ -26,24 +26,27 @@ jobs:
     - name: 🔨 Node Build release Theme file
       id: test
       run: |
-        cd Theme;
-        yarn install;
-        echo "::debug::$(yarn test)"
-        echo "::set-output name=LOG::test";
+        cd Theme
+        yarn install
+        CSS_LOG=$(yarn lint:css)
+        CSS_LOG="${MY_STRING//'%'/'%25'}"
+        CSS_LOG="${MY_STRING//$'\n'/'%0A'}"
+        CSS_LOG="${MY_STRING//$'\r'/'%0D'}"
+        echo "::set-output name=CSS_LOG::$CSS_LOG";
         yarn test;
     - name: if fail
       uses: actions/github-script@v4
       env:
-        LOG: ${{steps.test.outputs.LOG}}
+        CSS_LOG: ${{steps.test.outputs.CSS_LOG}}
       with:
         script: |
-          const { LOG } = process.env
+          const { CSS_LOG } = process.env
           const ref = "${{github.ref}}"
           const pull_number = Number(ref.split("/")[2])
           await github.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
             repo: context.repo.repo,
-            body: LOG
+            body: CSS_LOG
           })
       if: failure()
