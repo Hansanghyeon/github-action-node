@@ -19,10 +19,10 @@ jobs:
       uses: actions/github-script@v4
       with:
         script: |
-          const ref = "${{github.ref}}";
-          const pull_number = Number(ref.split("/")[2]);
-          const jsLog = ${{ steps.test.outputs.js }};
-          console.log(jsLog);
+          const ref = "${{github.ref}}"
+          const pull_number = Number(ref.split("/")[2])
+          const jsLog = ${{ steps.test.outputs.js }}
+          console.log(jsLog)
           await github.issues.createComment({
             issue_number: context.issue.number,
             owner: context.repo.owner,
