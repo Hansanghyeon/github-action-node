@@ -7,6 +7,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
+    - name: Get yarn cache directory path
+      id: yarn-cache-dir-path
+      run: |
+        cd Theme;
+        echo "::set-output name=dir::$(yarn cache dir)"
+    - uses: actions/cache@v1
+      id: yarn-cache
+      with:
+        path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
     - name: 🏗 setup-node
       uses: actions/setup-node@v2
       with:
@@ -16,10 +28,8 @@ jobs:
       run: |
         cd Theme;
         yarn install;
-        echo "::group::My title"
-        LOG=`yarn test`
-        echo "::endgroup::"
-        echo "::set-output name=LOG::$LOG";
+        echo "::debug::$(yarn test)"
+        echo "::set-output name=LOG::test";
         yarn test;
     - name: if fail
       uses: actions/github-script@v4
