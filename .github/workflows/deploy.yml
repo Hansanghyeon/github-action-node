@@ -16,8 +16,10 @@ jobs:
       run: |
         cd Theme;\
         yarn install;\
-        echo "::set-output name=JS::$(yarn lint:js)";\
-        echo "::set-output name=CSS::$(yarn lint:css)";\
+        yarn lint:js >> $JS_LOG;\
+        yarn lint:css >> $CSS_LOG;\
+        echo "::set-output name=JS::$JS_LOG";\
+        echo "::set-output name=CSS::$CSS_LOG";\
         yarn test;
     - name: if fail
       uses: actions/github-script@v4
