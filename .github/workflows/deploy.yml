@@ -14,7 +14,7 @@ jobs:
         node-vsersion: '16.x'
     - run: cd Theme && yarn install
     - run: cd Theme && yarn test
-    - run: cd Theme; yarn lint:js; echo "::set-output name=js::$(yarn lint:js)"
+    - run: cd Theme; yarn lint:js; echo '::set-output name=JS::$(yarn lint:js)'
     - name: if fail
       uses: actions/github-script@v4
       with:
