@@ -16,8 +16,8 @@ jobs:
       run: |
         cd Theme;\
         yarn install;\
-        yarn lint:js >> $JS_LOG;\
-        yarn lint:css >> $CSS_LOG;\
+        JS_LOG=`yarn lint:js`;\
+        CSS_LOG=`yarn lint:css`;\
         echo "::set-output name=JS::$JS_LOG";\
         echo "::set-output name=CSS::$CSS_LOG";\
         yarn test;
