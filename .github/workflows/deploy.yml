@@ -1,7 +1,8 @@
 name: 🚧 github action meta
 on:
   pull_request:
-    branches: [ $default-branch, test ]
+    branches:
+      - develop
 
 jobs:
   asset:
